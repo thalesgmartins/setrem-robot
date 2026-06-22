@@ -23,12 +23,6 @@ bridge_protocol_version mqttv311
 # O "1" final é o QoS usado na replicação.
 topic robo/telemetria/# out 1
 
-# --- TLS (a bridge valida o servidor remoto com o nosso CA) ---
-bridge_cafile /mosquitto/certs/ca.crt
-bridge_tls_version tlsv1.2
-# false = verifica o hostname/IP contra o certificado (NÃO afrouxe isso).
-bridge_insecure false
-
 # --- Autenticação no broker remoto ---
 remote_username SUBSTITUA_USUARIO
 remote_password SUBSTITUA_SENHA
