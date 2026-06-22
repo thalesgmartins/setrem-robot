@@ -1,4 +1,23 @@
-# Byte-compiled / optimized / DLL files
+# --------------------------------------------------------
+# IGNORA DIRETÓRIOS e ARQUIVOS dos servers MQTT
+# --------------------------------------------------------
+
+# Configuração da bridge do server local MQTT
+pi/mosquitto/config/conf.d/bridge.conf
+
+# Arquivo de senhas do broker remoto
+cloud/mosquitto/config/passwd
+
+# Dados persistidos / logs
+**/mosquitto/data/
+**/mosquitto/log/
+
+
+# --------------------------------------------------------
+# IGNORA DIRETÓRIOS, ARQUIVOS e EXTENSÔES COMUNS DO PYTHON
+# --------------------------------------------------------
+
+ Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
 *$py.class
