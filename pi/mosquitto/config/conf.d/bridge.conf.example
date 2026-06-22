@@ -1,0 +1,49 @@
+# ============================================================
+# BRIDGE: Pi 5 (local)  ->  VM do datacenter (remoto)
+# ------------------------------------------------------------
+# COPIE este arquivo para "bridge.conf" (mesma pasta) e preencha
+# os campos SUBSTITUA_*. O bridge.conf real NÃO vai pro git
+# (está no .gitignore) porque contém a senha do broker remoto.
+#
+#   cp bridge.conf.example bridge.conf
+#   # edite bridge.conf
+# ============================================================
+
+# Nome lógico desta conexão de bridge (aparece nos logs).
+connection bridge-telemetria
+
+# Endereço do broker remoto. Use o MESMO host/IP que está no SAN
+# do certificado do servidor (gerado pelo scripts/gen-certs.sh),
+# senão a verificação TLS falha.
+address SUBSTITUA_VM_HOST:8883
+
+bridge_protocol_version mqttv311
+
+# --- O QUE replicar e em qual direção ---
+# "out" = mensagens publicadas LOCALMENTE neste padrão são enviadas
+#         para o broker remoto. Telemetria sobe; comandos NÃO descem.
+# O "1" final é o QoS usado na replicação.
+topic robo/telemetria/# out 1
+
+# --- TLS (a bridge valida o servidor remoto com o nosso CA) ---
+bridge_cafile /mosquitto/certs/ca.crt
+bridge_tls_version tlsv1.2
+# false = verifica o hostname/IP contra o certificado (NÃO afrouxe isso).
+bridge_insecure false
+
+# --- Autenticação no broker remoto ---
+remote_username SUBSTITUA_USUARIO
+remote_password SUBSTITUA_SENHA
+
+# --- Resiliência da conexão ---
+# Mantém a sessão no remoto (não perde inscrições ao cair).
+cleansession false
+# Evita loop de mensagens entre os dois brokers.
+try_private true
+# Publica o estado da bridge (conectado/desconectado) num tópico LOCAL,
+# assim o orquestrador/BLE sabe se o link com a nuvem está de pé.
+notifications true
+notification_topic robo/sistema/bridge_status
+# Backoff de reconexão: começa em 5s, vai até no máximo 30s.
+restart_timeout 5 30
+keepalive_interval 30
