@@ -16,3 +16,5 @@ Você pode encontrar as instruções correspondentes para cada um deles aqui:
 - [**Raspberry Pi**](./docs/setup-pi.md): Como instalar as dependências, rodar os serviços em Python e gerenciar o broker local.
 - [**Cloud**](./docs/setup-cloud.md): Como subir o Mosquitto remoto, o banco TimescaleDB e o ingestor via Docker.
 - [**ESP32**](./docs/setup-esp32.md): Como compilar e gravar o firmware da ponte bluetooth no microcontrolador.
+
+> Para visualizar toda a documentação do projeto, você pode acessar a [Documentação Central](./docs/README.md).
