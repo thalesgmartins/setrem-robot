@@ -1,0 +1,18 @@
+# Broker MQTT REMOTO
+# Exposto à rede via TLS (porta 8883) com autenticação por usuário/senha.
+# Recebe a telemetria replicada pela bridge do Pi.
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: mosquitto-remote
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./mosquitto/config/passwd:/mosquitto/config/passwd:ro
+      - mosquitto_remote_data:/mosquitto/data
+
+volumes:
+  mosquitto_remote_data:
