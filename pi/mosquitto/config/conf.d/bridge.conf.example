@@ -12,10 +12,8 @@
 # Nome lógico desta conexão de bridge (aparece nos logs).
 connection bridge-telemetria
 
-# Endereço do broker remoto. Use o MESMO host/IP que está no SAN
-# do certificado do servidor (gerado pelo scripts/gen-certs.sh),
-# senão a verificação TLS falha.
-address SUBSTITUA_VM_HOST:8883
+# Endereço do broker remoto.
+address SUBSTITUA_VM_HOST:1883
 
 bridge_protocol_version mqttv311
 
