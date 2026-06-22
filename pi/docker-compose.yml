@@ -14,7 +14,6 @@ services:
     volumes:
       - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - ./mosquitto/config/conf.d:/mosquitto/config/conf.d:ro
-      - ./mosquitto/certs:/mosquitto/certs:ro
       - mosquitto_local_data:/mosquitto/data
     healthcheck:
       # Considera saudável se o broker responde a um publish local.
