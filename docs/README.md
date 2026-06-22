@@ -14,4 +14,4 @@ Aqui você encontra todas as documentações, separadas por tipo/ambiente.
 
 ## ESP32
 
-- [**Setup da Ponte Bluetooth no ESP32**](./setup-esp32);
+- [**Setup da Ponte Bluetooth no ESP32**](./setup-esp32.md);
