@@ -2,6 +2,10 @@
 
 Aqui você encontra todas as documentações, separadas por tipo/ambiente.
 
+## Arquitetura
+
+- [**Contrato MQTT**](./contrato-mqtt.md): tópicos, formatos de mensagem e o fluxo de dados entre os serviços.
+
 ## Raspberry Pi
 
 - [**Setup no Raspberry Pi**](./setup-pi.md);

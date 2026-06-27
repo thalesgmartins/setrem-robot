@@ -1,0 +1,30 @@
+# Copie para /etc/systemd/system/robo-gps.service e ajuste
+# User, a porta serial do GPS e os caminhos conforme onde o repo está.
+#
+#   sudo cp pi/systemd/robo-gps.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now robo-gps
+#   journalctl -u robo-gps -f   # ver logs
+
+[Unit]
+Description=Robo PIE V - GPS (NMEA serial -> MQTT)
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Usuário precisa estar no grupo 'dialout' para ler a serial do GPS.
+User=setrem
+WorkingDirectory=/home/setrem/setrem-robot/pi
+ExecStart=/home/setrem/setrem-robot/pi/.venv/bin/gps
+# /dev/serial0 = UART do Pi. Use /dev/ttyACM0 ou /dev/ttyUSB0 se o GPS for USB.
+Environment=GPS_PORT=/dev/serial0
+Environment=GPS_BAUD=9600
+Environment=MQTT_HOST=127.0.0.1
+Environment=MQTT_PORT=1883
+# Reinicia sempre que cair; espera 3s entre tentativas.
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

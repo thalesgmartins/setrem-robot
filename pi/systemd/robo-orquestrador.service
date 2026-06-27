@@ -1,0 +1,27 @@
+# Copie para /etc/systemd/system/robo-orquestrador.service e ajuste
+# User e os caminhos conforme onde o repo está.
+#
+#   sudo cp pi/systemd/robo-orquestrador.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now robo-orquestrador
+#   journalctl -u robo-orquestrador -f   # ver logs
+
+[Unit]
+Description=Robo PIE V - Orquestrador (roteamento de comandos e telemetria)
+# Sobe depois da rede e do broker local em container.
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=setrem
+WorkingDirectory=/home/setrem/setrem-robot/pi
+ExecStart=/home/setrem/setrem-robot/pi/.venv/bin/orquestrador
+Environment=MQTT_HOST=127.0.0.1
+Environment=MQTT_PORT=1883
+# Reinicia sempre que cair; espera 3s entre tentativas.
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

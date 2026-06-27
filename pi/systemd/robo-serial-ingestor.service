@@ -16,8 +16,8 @@ Wants=network-online.target
 Type=simple
 # Troque para o usuário do projeto (precisa estar no grupo 'dialout').
 User=setrem
-WorkingDirectory=/home/setrem/setrem-robot/pi/services/serial_ingestor
-ExecStart=/home/setrem/setrem-robot/pi/services/serial_ingestor/.venv/bin/serial-ingestor
+WorkingDirectory=/home/setrem/setrem-robot/pi
+ExecStart=/home/setrem/setrem-robot/pi/.venv/bin/serial-ingestor
 Environment=SERIAL_PORT=/dev/ttyUSB0
 Environment=SERIAL_BAUD=115200
 Environment=MQTT_HOST=127.0.0.1

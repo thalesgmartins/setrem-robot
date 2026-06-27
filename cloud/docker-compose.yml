@@ -1,6 +1,13 @@
-# Broker MQTT REMOTO
-# Exposto à rede via TLS (porta 8883) com autenticação por usuário/senha.
-# Recebe a telemetria replicada pela bridge do Pi.
+# ============================================================
+# Ambiente Cloud do robô
+# ------------------------------------------------------------
+#   mosquitto    -> broker MQTT remoto (recebe a telemetria da bridge do Pi)
+#   timescaledb  -> banco de séries temporais (histórico de telemetria)
+#   ingestor     -> assina robo/telemetria/# e grava no TimescaleDB
+#
+# Variáveis sensíveis (senhas) vêm de um arquivo .env ao lado deste compose.
+# Copie .env.example para .env e preencha. Veja docs/setup-cloud.md.
+# ============================================================
 
 services:
   mosquitto:
@@ -14,5 +21,49 @@ services:
       - ./mosquitto/config/passwd:/mosquitto/config/passwd:ro
       - mosquitto_remote_data:/mosquitto/data
 
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: timescaledb
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${PGUSER:-robo}
+      POSTGRES_PASSWORD: ${PGPASSWORD:?defina PGPASSWORD no .env}
+      POSTGRES_DB: ${PGDATABASE:-robo}
+    ports:
+      # Exposto só no loopback da VM: o banco não fica aberto à internet.
+      # Acesse remotamente via túnel SSH se precisar inspecionar.
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+      # Scripts em initdb.d rodam só na PRIMEIRA subida (volume vazio).
+      - ./timescaledb/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER:-robo} -d ${PGDATABASE:-robo}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  ingestor:
+    build: ./ingestor
+    container_name: ingestor-cloud
+    restart: unless-stopped
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+      mosquitto:
+        condition: service_started
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_USERNAME: ${MQTT_USERNAME:?defina MQTT_USERNAME no .env}
+      MQTT_PASSWORD: ${MQTT_PASSWORD:?defina MQTT_PASSWORD no .env}
+      PGHOST: timescaledb
+      PGPORT: 5432
+      PGUSER: ${PGUSER:-robo}
+      PGPASSWORD: ${PGPASSWORD:?defina PGPASSWORD no .env}
+      PGDATABASE: ${PGDATABASE:-robo}
+
 volumes:
   mosquitto_remote_data:
+  timescaledb_data:

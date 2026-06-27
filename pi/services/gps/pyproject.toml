@@ -1,0 +1,21 @@
+[project]
+name = "gps"
+version = "0.1.0"
+description = "Lê sentenças NMEA de um receptor GPS na serial e publica a posição no broker MQTT local do robô."
+requires-python = ">=3.11"
+dependencies = [
+    "pyserial>=3.5",
+    "pynmea2>=1.19",
+    # Lib compartilhada local (instalada em modo editável antes deste serviço).
+    "robo-common",
+]
+
+[project.scripts]
+gps = "gps.main:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

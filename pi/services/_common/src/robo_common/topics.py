@@ -24,10 +24,17 @@ VOZ_FALAR = f"{ROOT}/voz/falar"
 # --- GPS ---
 GPS_POSICAO = f"{ROOT}/gps/posicao"
 
+# --- Wi-Fi ---
+# Comando de provisionamento roteado pelo orquestrador para o serviço wifi.
+# Chega originalmente como {"tipo":"wifi",...} no comando vindo do app.
+WIFI_COMANDO = f"{ROOT}/wifi/comando"
+
 # --- Sistema ---
 SISTEMA_BATERIA = f"{ROOT}/sistema/bateria"
 SISTEMA_HEARTBEAT = f"{ROOT}/sistema/heartbeat"
 SISTEMA_BRIDGE_STATUS = f"{ROOT}/sistema/bridge_status"
+# Estado da conexão Wi-Fi (publicado pelo serviço wifi após provisionamento).
+SISTEMA_WIFI = f"{ROOT}/sistema/wifi"
 
 # --- Telemetria (espelhada para a nuvem pela bridge do Mosquitto) ---
 # Tudo que precisa ser PERSISTIDO no banco é publicado sob este prefixo.
